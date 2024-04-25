@@ -12,9 +12,9 @@
         <input type="submit" value="Submit">
     </form>
     <?php
-
-    include 'BingMapsHelperFunctions.php';
-
+    //Esto realmente no se utiliza en este script, aunque está presente en la documentación
+    //include 'BingMapsHelperFunctions.php';
+    
     if (isset($_POST['key']) && isset($_POST['origin']) && isset($_POST['destination'])) {
         // Set default map width and height  
         $mapWidth = 300;
@@ -37,11 +37,7 @@
         // Construct final URL for call to Routes API  
         $routesURL = $baseURL . "/" . $travelMode . "?wp.0=" . $wayPoint0 . "&wp.1=" . $wayPoint1 . "&optimize=" . $optimize . "&routePathOutput=" . $routePathOutput . "&distanceUnit=" . $distanceUnit . "&output=xml&key=" . $key;
 
-        echo "ruta: " . $routesURL;
-
-
-
-
+       
         // Get output from API and convert to XML element using php_xml  
         $output = file_get_contents($routesURL);
         $response = new SimpleXMLElement($output);
@@ -59,21 +55,20 @@
             $instruction = $itinerary[$i]->Instruction;
             // While looping, construct the $maneuverPoints array for later use (note casting to double)  
             //Tuve que comentar estas 2 líneas porque $maneuverPoints no está definido
-// $maneuverPoints[$i]->Latitude = (double) $itinerary[$i]->ManeuverPoint->Latitude;  
-// $maneuverPoints[$i]->Longitude = (double) $itinerary[$i]->ManeuverPoint->Longitude;  
+            // $maneuverPoints[$i]->Latitude = (double) $itinerary[$i]->ManeuverPoint->Latitude;  
+            // $maneuverPoints[$i]->Longitude = (double) $itinerary[$i]->ManeuverPoint->Longitude;  
             echo "<li>" . $instruction . "</li>";
         }
         echo "</ol>";
 
 
-    //Thanks to https://learn.microsoft.com/en-us/bingmaps/rest-services/imagery/get-a-static-map
-    //icon styles: https://learn.microsoft.com/en-us/bingmaps/rest-services/common-parameters-and-types/pushpin-syntax-and-icon-styles
+        //Thanks to https://learn.microsoft.com/en-us/bingmaps/rest-services/imagery/get-a-static-map
+        //icon styles: https://learn.microsoft.com/en-us/bingmaps/rest-services/common-parameters-and-types/pushpin-syntax-and-icon-styles
         $sampleUrl = "https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/Routes?waypoint.1=$wayPoint0;64;1&waypoint.2=$wayPoint1;66;2&key=$key";
-        //$sampleUrl = "https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/Routes?wp.0=Seattle,WA;64;1&wp.1=Redmond,WA;66;2&key=$key";
+
         echo "img url es: " . $sampleUrl . "<br/>";
 
-   echo "<img src='" .
-            $sampleUrl . "' >";
+        echo "<img src='" . $sampleUrl . "' >";
 
     } else {
         echo "<p>Please enter your Bing Maps key and complete all address fields, then click submit.</p>";
